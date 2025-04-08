@@ -1621,21 +1621,19 @@ class ComQwen(Qwen2Model):
         self.register_module("big_linear_model", self.big_linear_model)
     
     def get_small_models(self, model_type, data_type, model_path, user_num, item_num, emb_size):
-        if data_type == 'movie':
-            if model_type =='MF':
-                mf_config = {
-                    "user_num": user_num,
-                    "item_num": item_num,
-                    "embedding_size": emb_size,
-                    }
-                import omegaconf
+        mf_config = {
+            "user_num": user_num,
+            "item_num": item_num,
+            "embedding_size": emb_size,
+            }
+        import omegaconf
 
-                mf_config = omegaconf.OmegaConf.create(mf_config)
-                from small_models.baseline_train_mf_book_step1_cl import MatrixFactorization
-                model = MatrixFactorization(mf_config).cuda()
-                model.load_state_dict(torch.load(model_path))
-                self.small_model = model
-                self.register_module("small_model", self.small_model)
+        mf_config = omegaconf.OmegaConf.create(mf_config)
+        from baseline_train_mf_book_step1_cl import MatrixFactorization
+        model = MatrixFactorization(mf_config).cuda()
+        model.load_state_dict(torch.load(model_path))
+        self.small_model = model
+        self.register_module("small_model", self.small_model)
     def forward(
             self,
             input_ids: torch.LongTensor = None,
@@ -1982,9 +1980,9 @@ def safe_save_model_for_hf_trainer(
                     new_key = key.replace(big_prefix, '')
                     big_model_params[new_key] = value
                     
-            torch.save(projection_model_params, '/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/data/data_llm/book-collm-original-two/888/projection_model.pth')
-            torch.save(small_model_params, '/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/data/data_llm/book-collm-original-two/888/small_model.pth')
-            torch.save(big_model_params, '/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/data/data_llm/book-collm-original-two/888/big_model.pth')
+            torch.save(projection_model_params, '***path_to_projection_model***')
+            torch.save(small_model_params, '***path_to_small_model***')
+            torch.save(big_model_params, '***path_to_big_model***')
         # projection_params = {}
         # small_model_params = {}
         # for key, value in state_dict.items():
@@ -2096,41 +2094,25 @@ def train():
 
         # model = get_peft_model(model, lora_config)
         sep_tokens = ["<User_ID>", "<Item_ID>", "<Warm_ID>"]
-        lora_model_path = "/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/data/data_llm/book-stage1-original/book/checkpoint-1312/"
+        lora_model_path = "***path_to_lora_checkpoints***"
         special_tokens_dict = {'additional_special_tokens': sep_tokens}
         tokenizer.add_special_tokens(special_tokens_dict)
         sep_token_id_li = []
         for sep in sep_tokens:
             token_id = tokenizer.convert_tokens_to_ids(sep)                
-            sep_token_id_li.append(token_id)                                #/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/data/data_llm/book-collm-original/model/cycle/small_model.pth
-        model.model.get_small_models(model_type='MF', data_type='movie',  #/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/small_models/pretrained_models/mf/book/2_21_mf_2025_step1.pth
-                                     #model_path = '/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/data/data_llm/book-collm-original-two/888/small_model.pth',
-                                     model_path="/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/small_models/pretrained_models/mf/book/2_21_mf_2025_step1.pth",
+            sep_token_id_li.append(token_id)                                
+        model.model.get_small_models(model_type='MF', data_type='movie',  
+                                     model_path="***path_to_small_model***",
                                      user_num=22967, item_num=34154, emb_size=256)
         
         model.model.prepare_collm_prompt(user_token_id=sep_token_id_li[0], item_token_id=sep_token_id_li[1], warm_token_id=sep_token_id_li[2],
-                                         small_emb_dim=256, # "/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/data/data_llm/book-collm-original/model/cycle/projection_model.pth
-                                         #projection_model_path='/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/data/data_llm/book-collm-original-two/888/projection_model.pth', #"/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/data/data_llm/book-collm-original/model/cycle/ab/projection_model.pth", 
-                                         #big_linear_path='/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/data/data_llm/book-collm-original-two/888/big_model.pth',
+                                         small_emb_dim=256, 
+                                         projection_model_path='***path_to_projection_model***', 
+                                         big_linear_path='***path_to_big_model***',
                                          pretrained_with_small=False
                                          )
         
-        # model.model.get_small_models(model_type='MF', data_type='movie',
-        #                              model_path="/datas/wangzihan/LLMREC/Chat_Qwen/examples/sft/data/data_llm/movie-collm/model/cycle/small_model.pth",
-        #                              user_num=839, item_num=3256, emb_size=256)
-        # model.model.prepare_collm_prompt(user_token_id=sep_token_id_li[0], item_token_id=sep_token_id_li[1],
-        #                                  small_emb_dim=256,
-        #                                  projection_model_path="/datas/wangzihan/LLMREC/Chat_Qwen/examples/sft/data/data_llm/movie-collm/model/cycle/projection_model.pth",
-        #                                  pretrained_with_small=True)
-        # 加载LoRA配置
-        # peft_config = PeftConfig.from_pretrained(lora_model_path)
-            
-        # 将LoRA权重加载到量化模型中
         peft_model = PeftModel.from_pretrained(model, lora_model_path)
-        # for name, param in model.base_model.model.model.small_model.named_parameters()
-        #     print(f"Layer: {name} | Size: {param.shape}")
-        # for name, param in model.base_model.model.model.projection_model.named_parameters():
-        #     print(f"Layer: {name} | Size: {param.shape}")
         peft_model.eval()
         
         for name, param in peft_model.named_parameters():
@@ -2157,7 +2139,6 @@ def train():
         model=peft_model, tokenizer=tokenizer, args=training_args, **data_module,
         compute_metrics=compute_metrics, preprocess_logits_for_metrics=preprocess_logits_for_metrics,
     )
-    # # print(11111)
     # trainer.train()
     
     # safe_save_model_for_hf_trainer(

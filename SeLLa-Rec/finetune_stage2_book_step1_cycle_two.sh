@@ -21,13 +21,13 @@ MASTER_ADDR=${MASTER_ADDR:-localhost}
 # The port for communication
 MASTER_PORT=${MASTER_PORT:-6002}
 
-MODEL="/workspace/wzh/self_reasearch/Qwen2-7B" # Set the path if you do not want to load from huggingface directly
+MODEL="***path_to_Qwen2_7B***" # Set the path if you do not want to load from huggingface directly
 # ATTENTION: specify the path to your training data, which should be a json file consisting of a list of conversations.
 # See https://qwen.readthedocs.io/en/latest/training/SFT/example.html#data-preparation for more information.
-TRAIN_DATA="/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/data/data_llm/book-collm-original-two/train_data.jsonl"
-DS_CONFIG_PATH="/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/ds_config_zero3.json"
-EVAL_DATA="/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/data/data_llm/book-collm-original-two/test_data.jsonl"
-OUTPUT_DIR="/workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/data/data_llm/book-collm-original-two/model/cycle/ab/888"
+TRAIN_DATA="***path_to_train_data***"
+DS_CONFIG_PATH="***path_tpds_config_zero3.json***"
+EVAL_DATA="***path_to_test_data***"
+OUTPUT_DIR="***path_to_output_dir***"
 USE_LORA=True
 Q_LORA=False
 
@@ -39,7 +39,7 @@ DISTRIBUTED_ARGS="
     --master_port $MASTER_PORT
 "
 
-torchrun $DISTRIBUTED_ARGS /workspace/wzh/self_reasearch/Chat_Qwen/examples/sft/finetune_stage2_book_step1_cycle_two.py \
+torchrun $DISTRIBUTED_ARGS /finetune_stage2_book_step1_cycle_two.py \
     --model_name_or_path $MODEL \
     --data_path $TRAIN_DATA \
     --eval_data_path $EVAL_DATA \
