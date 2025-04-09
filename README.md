@@ -10,7 +10,7 @@ Download datasets and corresponding finetuned model weights from the links below
 
 | Datasets link | Finetuned Model weights link |  
 | :--- | :--- |  
-| **[Amazon-Book](https://drive.google.com/file/d/13yPDzIDH025CdGttRg3fIhWhO9jbpDHS/view?usp=sharing)** | [checkpoint-656-Book](https://drive.google.com/file/d/1A_Mw4mCJMPqe9aOoMbd5NW54GAx_6lMw/view?usp=sharing)|  
+| **[Amazon-Book](https://drive.google.com/file/d/13yPDzIDH025CdGttRg3fIhWhO9jbpDHS/view?usp=sharing)** | [checkpoint-656-Book](https://drive.google.com/drive/folders/1fDO8zweG3T_5y-2leoEnSNpsmBnilUQC?usp=sharing)|  
 | **[ML-1M](https://drive.google.com/file/d/1dvBXIsixSq7e5FZDAmuwhtCPrwSoiDBv/view?usp=sharing)** | [checkpoint-254-Movie](https://drive.google.com/drive/folders/1TOL_Rohyc0FrJeQZUuaWXCYEHqk3uuCR?usp=sharing) |  
 
 ### 🚀 Step 2: Run Evaluation Script  
