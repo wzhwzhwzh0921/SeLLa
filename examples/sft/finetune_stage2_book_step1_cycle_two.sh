@@ -21,13 +21,16 @@ MASTER_ADDR=${MASTER_ADDR:-localhost}
 # The port for communication
 MASTER_PORT=${MASTER_PORT:-6002}
 
-MODEL="***path_to_Qwen2_7B***" # Set the path if you do not want to load from huggingface directly
+
 # ATTENTION: specify the path to your training data, which should be a json file consisting of a list of conversations.
 # See https://qwen.readthedocs.io/en/latest/training/SFT/example.html#data-preparation for more information.
-TRAIN_DATA="***path_to_train_data***"
-DS_CONFIG_PATH="***path_tpds_config_zero3.json***"
-EVAL_DATA="***path_to_test_data***"
-OUTPUT_DIR="***path_to_output_dir***"
+
+MODEL_NAME=${1:-"/path/to/Qwen-7B-base"} # Set the path if you do not want to load from huggingface directly
+TRAIN_DATA=${2:-"/path/to/train_data.json"}
+DS_CONFIG_PATH=${3:-"/path/to/ds_config_zero3.json"}
+EVAL_DATA=${4:-"/path/to/eval_data.json"}
+OUTPUT_DIR=${5:-"/path/to/output_dir"}
+
 USE_LORA=True
 Q_LORA=False
 
