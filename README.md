@@ -32,4 +32,4 @@ Detailed evaluation results and full logs d will be stored at `output_dir_book/o
 
 ## ⚡ Training  
 
-We will release the rest part 
+...
